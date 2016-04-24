@@ -37,23 +37,13 @@ struct node{
 };
 
 void merge_two_bst(struct node *root1, struct node *root2){
+	struct node *temp = root2;
 	if (root1 == NULL){
 		root1 = root2;
 		return;
 	}
 	
-	/*if (root1 ){
-		merge_two_bst(root1->left, root2);
-		if (root1->left == NULL){
-			root1->left = root2;
-			if (root2->left)
-				root2 = root2->left;
-			else
-				root2 = root2->right;
 
-		}
-		merge_two_bst(root1->left, root2);
-	}*/
 	
 
 	
