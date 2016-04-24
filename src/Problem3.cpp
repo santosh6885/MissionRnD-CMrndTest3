@@ -50,7 +50,11 @@ Difficulty : Medium
 */
 #include <stdlib.h>;
 #include <stdio.h>
-
+# define MAXA 50
+struct enode *s[MAXA];
+int topa = -1;
+void pusha(struct enode *);
+struct enode * popa();
 //data can be accessed using root->data;
 struct enode{
 	char data[6];
@@ -63,10 +67,28 @@ Helper Functions are optional to write
 */
 //Helper Functions Start
 int isOperator(char *data){
-	return 0;
+	char check = data[0];
+	if (check == '+' || check == '-' || check == '*')
+		return check;
+	else 
+		return 0;
 }
 int isOperand(char *data){
-	return 0;
+	char ch = data[0];
+	int i,num=0;
+	if (ch >= 48 && ch <= 57)
+	{
+		for (i = 0; data[i]; i++){
+			if (ch >= 48 && ch <= 57){
+				num = (data[i] - '0') + num;
+				num = num * 10;
+			}
+		}
+		num = num / 10;
+		return num;
+	}
+	else
+		return -1;
 }
 int getOperand(char *data){
 	//converts data string to an integer "123" => 123
@@ -74,6 +96,74 @@ int getOperand(char *data){
 }
 //Helper Functions end
 int solve_tree(struct enode *root){
-    return -1;
-}
+	int prevop=-1, nexttop=-1,res=0,flag = 1;
+	char ope = 0;
 
+	if (root == NULL)
+		return -1;
+	while (1){
+		while (root){
+
+			pusha(root);
+			root = root->left;
+
+		}
+		if (topa == -1)
+			break;
+		root = popa();
+		if (ope==0)
+			ope = isOperator(root->data);
+		if (flag == 1){
+			prevop = isOperand(root->data);
+			flag = 0;
+		}
+		else
+			nexttop = isOperand(root->data);
+		
+		if (ope != 0 && nexttop !=-1){
+			if (res == 0){
+				if (ope == '+'){
+					res = prevop + nexttop;
+				}
+				else if (ope == '-'){
+					res = prevop - nexttop;
+				}
+				else if (ope == '*'){
+					res = prevop * nexttop;
+				}
+			}
+			else {
+				if (ope == '+'){
+					res = res + nexttop;
+				}
+				else if (ope == '-'){
+					res = res - nexttop;
+				}
+				else if (ope == '*'){
+					res = res * nexttop;
+				}
+			}
+			ope = 0;
+			nexttop = -1;
+		}
+
+
+		root = root->right;
+	}
+	return res;
+
+    //return -1;
+}
+void pusha(struct enode * x){
+	topa++;
+	s[topa] = (struct enode *)malloc(sizeof(struct enode *));
+	s[topa] = x;
+
+}
+struct enode * popa(){
+	struct enode *x;
+	x = s[topa];
+	topa--;
+	return x;
+
+}

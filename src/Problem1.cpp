@@ -43,6 +43,11 @@ Difficulty : Easy
 #include <stdlib.h>
 #include <stdio.h>
 #include <math.h>
+# define MAX 20
+struct node *s[MAX];
+int top = -1;
+void push(struct node *);
+struct node * pop();
 
 struct node{
 	int data;
@@ -52,5 +57,36 @@ struct node{
 
 
 int get_missing_value(struct node *root,int n){
-    return -1;
+	int sum;
+	if (root == NULL || n == 0)
+		return -1;
+	sum = n * ((n + 1) / 2);
+	while (1){
+		while (root){
+
+			push(root);
+			root = root->left;
+
+		}
+		if (top == -1)
+			break;
+		root = pop();
+		sum = sum - root->data;
+		root = root->right;
+	}
+	return sum;
+   // return -1;
+}
+void push(struct node * x){
+	top++;
+	s[top] = (struct node *)malloc(sizeof(struct node *));
+	s[top] = x;
+
+}
+struct node * pop(){
+	struct node *x;
+	x = s[top];
+	top--;
+	return x;
+
 }
